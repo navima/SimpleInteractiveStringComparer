@@ -7,22 +7,20 @@ namespace SimpleInteractiveStringComparer
 {
 	class Program
 	{
-		static StringBuilder @string = new();
-		static void Main(string[] args)
+		static void Main()
 		{
-			Console.WriteLine($"Please supply strings to compare, separated with \",\"");
-			string listStr = Console.ReadLine();
-			@string.AppendLine(listStr);
-			string[] list = listStr.Split(",");
-			SortedSet<string> res = new(new InteractiveComparer(@string));
+			StringBuilder inputEcho = new();
+			Console.WriteLine("Please supply strings to compare, separated with \",\"");
+			string impustListStr = Console.ReadLine();
+			inputEcho.AppendLine(impustListStr);
+			string[] list = impustListStr.Split(",");
+			SortedSet<string> res = new(new InteractiveComparer(inputEcho));
 			foreach (var item in list)
-			{
 				res.Add(item);
-			}
 			int i = 0;
 			foreach (var item in res)
 				Console.WriteLine($"{(res.Count - 1 - i++) / ((float)res.Count - 1) * 9 + 1:0.0}: {item}");
-			File.WriteAllText("./compareresults" + DateTime.Now.ToString("yyyy MM dd HH mm")+".txt", @string.ToString());
+			File.WriteAllText("./compareresults" + DateTime.Now.ToString("yyyy MM dd HH mm") + ".txt", inputEcho.ToString());
 		}
 		public static void Write(params object[] oo)
 		{
@@ -44,18 +42,14 @@ namespace SimpleInteractiveStringComparer
 
 	internal class InteractiveComparer : IComparer<string>
 	{
-		static StringBuilder @string = new();
-		public InteractiveComparer(StringBuilder strB)
-		{
-			@string = strB;
-		}
+		private readonly StringBuilder sb;
+		public InteractiveComparer(StringBuilder sb) => this.sb = sb;
 		public int Compare(string x, string y)
 		{
 			Program.Write(ConsoleColor.Green, x, null, " or ", ConsoleColor.Green, y, null, "? (0/1): ");
 			string inResponse = Console.ReadLine();
-			@string.AppendLine(inResponse);
+			sb?.AppendLine(inResponse);
 			return inResponse == "0" ? -1 : +1;
 		}
 	}
-
 }
